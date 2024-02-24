@@ -22,11 +22,11 @@
 ```json
 {
   "items": [
-    {"name": "Hokkien Mee", "description": "Noodles with seafood"},
-    {"name": "Nasi Lemak", "description": "Rice but better"},
-    {"name": "Chicken Rice", "description": "Chicken with rice"},
-    {"name": "Bak Kut Teh", "description": "Hot soup"},
-    {"name": "Fries", "description": "Fried potato"}
+    {"name": "Hokkien Mee", "description": "Noodles with seafood", "url": "image url"},
+    {"name": "Nasi Lemak", "description": "Rice but better", "url": "image url"},
+    {"name": "Chicken Rice", "description": "Chicken with rice", "url": "image url"},
+    {"name": "Bak Kut Teh", "description": "Hot soup", "url": "image url"},
+    {"name": "Fries", "description": "Fried potato", "url": "image url"}
   ]
 }
 ```
