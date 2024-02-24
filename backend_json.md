@@ -72,20 +72,18 @@
 **Output (example for restaurant_id = abc123):**
 ```json
 {
-  "id": "abc123",
-  "name": "MalayFoods",
-  "rating": {
-    "overall": 4.4,
-    "food": 3.5,
-    "service": 4,
-    "environment": 5,
-    "value": 2
-  },
-  "reviews": [
-    {"rating": 4, "content": "not bad, i like it haha"},
-    {"rating": 1, "content": "disgusting food sia"}
-  ],
-  "url": "https://maps.google.com/"
+    "id": "ChIJJ_15it4P2jERKqXEo1kYf14",
+    "name": "Takagi Ramen @ Jurong West",
+    "rating": {
+        "overall": 4.3,
+        "food": 4.5,
+        "service": 4.1,
+        "environment": 3,
+        "value": 5
+    },
+    "review": "Diverse menu with enjoyable dishes, excellent service, affordable prices, and heartwarming touches. Some cleanliness concerns during late night hours.",
+    "image_url": "https://lh3.googleusercontent.com/places/ANXAkqHcxu9xoEf7inAUYAnjIJf4t8jViJDeupSGX1SymxRriSwBr-4G_GvN0qkYk68SckWirB0ab3LCiARCHnU9iGH00TYdkxhRSIs=s4800-w400",
+    "map_url": "https://maps.google.com/?cid=6809187934886208810"
 }
 ```
 
