@@ -269,6 +269,10 @@
       integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
       crossorigin="anonymous"
     ></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js"></script>
     <script>
       function getAbsoluteHeight(el) {
         // Get the DOM Node if you pass in a string
@@ -280,10 +284,12 @@
 
         return Math.ceil(el.offsetHeight + margin);
       }
+
       var heightSum = 0;
       for (var ele of document.querySelectorAll(".measure")) {
         heightSum += getAbsoluteHeight(ele);
       }
+
       document.getElementById("body").style.height =
         getAbsoluteHeight(document.getElementById("body")) - heightSum + `px`;
     </script>

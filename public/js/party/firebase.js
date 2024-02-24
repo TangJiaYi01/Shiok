@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase
 import {
   getFirestore,
   doc,
+  onSnapshot,
   setDoc,
   getDoc,
 } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
@@ -9,45 +10,31 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
-  signInWithPopup,
-  signOut,
-  signInAnonymously,
-  setPersistence,
-  browserLocalPersistence,
 } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
+import { db } from "../firebaseConfig.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB8rdFuZFjdGJxCP829dhVjKfNKnIfuyQE",
-  authDomain: "shiok-ah.firebaseapp.com",
-  projectId: "shiok-ah",
-  storageBucket: "shiok-ah.appspot.com",
-  messagingSenderId: "238095376133",
-  appId: "1:238095376133:web:57039ed53990d3a41be16c",
-  measurementId: "G-P22X8YRJPV",
-};
+const analytics = getAnalytics();
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+const firestore = db;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider(app);
-const firestore = getFirestore();
-
+// Check if user is logged in
 if (!localStorage.getItem("uid") || !localStorage.getItem("userObj")) {
   window.location.href = "./index.html";
 }
 
+// Function to start a group
 async function startGroup(partyCode, leader = false) {
   const dataRow = doc(firestore, `party/${partyCode}`);
   var dataRowValue = await getDoc(dataRow);
   var data = {};
 
+  // Check if party exists
   if (dataRowValue.exists()) {
     data = JSON.parse(JSON.stringify(dataRowValue.data()));
   }
 
+  // Add user to party with role
   if (leader == "true") {
     data[localStorage.getItem("uid")] = [
       localStorage.getItem("userObj")["firstName"]
@@ -64,7 +51,10 @@ async function startGroup(partyCode, leader = false) {
     ];
   }
 
+  // Update party data
   await setDoc(dataRow, data, { merge: false });
+
+  // Update UI to display the information
   document.getElementById("content").innerHTML = `
           <div class="flex justify-between items-stretch">
             <h1 class="text-center font-black self-center">Party Code: ${partyCode}</h1>
@@ -109,6 +99,7 @@ async function startGroup(partyCode, leader = false) {
         </div>
           `;
 
+  // Loop through party members and display them
   for (let [uid, dataPts] of Object.entries(data)) {
     console.log(uid);
     console.log(dataPts);
@@ -134,12 +125,22 @@ async function startGroup(partyCode, leader = false) {
             `);
     }
   }
-  document.getElementById(`memberList`).innerHTML += `
-
-          `;
+  document.getElementById(`memberList`).innerHTML += ``;
 }
 
+function updatePartyUI(partyCode, partyData) {
+  const memberListHtml = Object.values(partyData.members)
+    .map(member => `<li>${member.name} (${member.role})</li>`)
+    .join('');
+
+  document.getElementById("partyMembers").innerHTML = memberListHtml;
+  document.getElementById("partyCodeDisplay").textContent = `Party Code: ${partyCode}`;
+}
+
+// Getting current URL
 let currentURL = window.location;
+
+// Check if there is a party code in the URL
 if (currentURL.search != "") {
   var queryString = currentURL.search;
   var urlParams = new URLSearchParams(queryString);
@@ -164,3 +165,62 @@ if (currentURL.search != "") {
     startGroup(urlParams.get("partyID"), urlParams.get("leader"));
   }
 }
+
+// Function to join a party
+async function viewParty(partyCode) {
+  // Reference to the party document
+  const partyRef = doc(db, "party", partyCode);
+
+  try {
+    const docSnapshot = await getDoc(partyRef);
+
+    if (!docSnapshot.exists()) {
+      console.log("No such document!");
+      // Optionally, handle the case where the document doesn't exist more robustly here
+    } else {
+      console.log("Document data:", docSnapshot.data());
+      // Further actions based on the document data can go here
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    // Handle the error more robustly here
+  }
+}
+
+function partyListener(partyCode) {
+  const docRef = doc(db, "party", partyCode);
+
+  let unsubscribe = onSnapshot(
+    docRef,
+    (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        console.log("Document data:", docSnapshot.data());
+        console.log("Current document content:");
+        Object.entries(docSnapshot.data()).forEach(([key, value]) => {
+          console.log(`${key}: ${value}`);
+        });
+      } else {
+        console.log("No such document!");
+        // Optionally, handle the case more robustly here
+      }
+    },
+    (error) => {
+      console.error("Error listening to document:", error);
+      // Handle the error more robustly here
+    }
+  );
+
+  // Consider returning unsubscribe if you want to provide the option to stop listening
+  return unsubscribe;
+}
+
+// Adding event listener to the join button
+document.getElementById("joinParty").addEventListener("click", async () => {
+  const code = document.getElementById("code").value;
+  if (code.length === 5) {
+    await viewParty(code);
+    partyListener(code);
+  } else {
+    alert("Invalid Party Code");
+  }
+});
