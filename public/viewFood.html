@@ -30,6 +30,7 @@
           src="https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png"
           alt="profile pic"
           class="w-full h-full object-cover rounded-full"
+          id="PFP"
         />
       </div>
       <div class="logo aspect-square">
@@ -119,6 +120,15 @@
     <!--AXIOS-->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+      // Check if account is already login
+      if (!(localStorage.getItem("uid") && localStorage.getItem("userObj"))) {
+        window.location.href = "./index.html";
+      } else {
+        document.getElementById("PFP").src =
+          JSON.parse(localStorage.getItem("result")).photoURL ||
+          "https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png";
+      }
+
       function getAbsoluteHeight(el) {
         // Get the DOM Node if you pass in a string
         el = typeof el === "string" ? document.querySelector(el) : el;
