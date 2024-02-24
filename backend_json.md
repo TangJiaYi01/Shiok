@@ -14,9 +14,11 @@
 **Input:**
 ```json
 {
-  "id_list": ["user1", "user2", "user3"]
+  "id_list": ["user1", "user2", "user3"],
+  "spice_list": [0, 0, 0]
 }
 ```
+`spice_list` is optional, otherwise takes in 0-1 float value. 1 means it will return food that is really random from what the user's preferences are, 0 means it will be based on that user's preferences
 
 **Output:**
 ```json
@@ -44,7 +46,9 @@
       {"userid": "d", "swiped": ["Fries"]}
     ]
   ],
-  "foods": ["Hokkien Mee", "Nasi Lemak", "Chicken Rice", "Bak Kut Teh", "Fries"]
+  "foods": ["Hokkien Mee", "Nasi Lemak", "Chicken Rice", "Bak Kut Teh", "Fries"],
+  "lat": 13.6123,
+  "lon": 131.61923,
 }
 ```
 
