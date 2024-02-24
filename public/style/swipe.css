@@ -1,19 +1,22 @@
 .frame {
   position: relative;
-  width: 90vw;
-  aspect-ratio: 1;
+  width: 100%;
+  aspect-ratio: 3/5;
   max-width: 400px;
-  max-height: 400px;
+  max-height: 530px;
   z-index: 1;
 }
 
+#icons .icon {
+  width: 50px !important;
+}
 .icons {
   user-select: none;
   z-index: 1;
 }
 
 .icons i {
-  font-size: 50px;
+  /* font-size: 50px; */
   border-radius: 50%;
   cursor: pointer;
 }
@@ -93,8 +96,8 @@
 }
 
 .card .bottom .title > span:nth-child(1) {
-  font-size: 2em;
-  font-weight: 700;
+  font-size: 1.75rem;
+  font-weight: bold;
   margin-right: 0.2em;
 }
 

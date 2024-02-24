@@ -22,9 +22,9 @@
     <link rel="stylesheet" href="./style/main.css" />
     <link rel="stylesheet" href="./style/swipe.css" />
   </head>
-  <body class="overflow-hidden">
+  <body class="overflow-hidden flex flex-col">
     <header
-      class="flex justify-between px-4 py-2 items-center measure md:max-w-lg mx-auto"
+      class="flex justify-between px-4 py-2 items-center measure md:max-w-lg mx-auto w-full h-[66px]"
     >
       <div class="icon aspect-square">
         <img
@@ -45,15 +45,57 @@
         />
       </div>
     </header>
-    <div class="flex justify-center flex-col items-center py-5">
+    <div
+      class="flex justify-center flex-col items-center relative h-[calc(100dvh-66px)]"
+    >
       <div class="frame"></div>
-      <div class="icons flex gap-24 mt-2" id="icons">
-        <div id="hate"><i class="bi bi-x-circle-fill"></i></div>
-        <div id="return"><i class="bi bi-arrow-clockwise"></i></div>
-        <div id="like"><i class="bi bi-check-circle-fill"></i></div>
+      <div
+        class="icons flex w-full justify-around py-3 text-xl mt-auto max-w-[400px]"
+        id="icons"
+      >
+        <button
+          class="icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2"
+          id="return"
+        >
+          <i
+            class="fa-solid fa-arrow-rotate-left text-xl text-amber-500"
+            aria-hidden="true"
+          ></i>
+        </button>
+        <button
+          id="hate"
+          class="icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2"
+        >
+          <i class="fa-solid fa-xmark text-red-700" aria-hidden="true"></i>
+        </button>
+        <button
+          class="icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2 relative"
+          id="moreInfo"
+        >
+          <i
+            class="fa-solid fa-angle-up text-xl text-black"
+            aria-hidden="true"
+          ></i>
+        </button>
+        <button
+          class="icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2"
+          id="like"
+        >
+          <i class="fa-solid fa-heart text-green-500" aria-hidden="true"></i>
+        </button>
+        <button
+          id="dashboard"
+          class="icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2"
+        >
+          <img src="./img/shiokie.png" class="icon" />
+        </button>
       </div>
     </div>
     <script>
+      document.getElementById("dashboard").addEventListener("click", () => {
+        window.location.href = "./dashboard.html";
+      });
+
       let imgCount = 0;
       let checkCounter = 0;
       var data = {
@@ -195,12 +237,12 @@
       initCard(current);
 
       document.querySelector("#like").onclick = () => {
-        moveX = 1;
+        moveX = 0.1;
         moveY = 0;
         complete();
       };
       document.querySelector("#hate").onclick = () => {
-        moveX = -1;
+        moveX = -0.1;
         moveY = 0;
         complete();
       };
@@ -211,7 +253,7 @@
         newCard.className = "card";
         newCard.dataset.illness = key;
         newCard.style.backgroundImage = `url(${value})`;
-        newCard.style.backgroundColor = `#5474fc`;
+        newCard.style.backgroundColor = `#fff`;
         newCard.innerHTML = `
           <div class="is-like"></div>
           <div class="bottom">
@@ -261,13 +303,16 @@
         current.removeEventListener("pointermove", onPointerMove);
         current.removeEventListener("pointerup", onPointerUp);
         current.removeEventListener("pointerleave", onPointerUp);
-        if (Math.abs(moveX) > frame.clientWidth / 2) {
+        if (Math.abs(moveX) > frame.clientWidth / 6) {
           current.removeEventListener("pointerdown", onPointerDown);
           complete();
         } else cancel();
       }
 
       document.getElementById("return").addEventListener("click", () => {
+        if (checkCounter == 0) {
+          return;
+        }
         // document.getElementById("title").style.opacity = 100;
         // document.getElementById("icons").style.opacity = 100;
         // if (document.getElementById("final")) {
