@@ -31,6 +31,7 @@
           src="https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png"
           alt="profile pic"
           class="w-full h-full object-cover rounded-full"
+          id="PFP"
         />
       </div>
       <div class="logo aspect-square">
@@ -91,272 +92,302 @@
         </button>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div
+      class="modal hidden fixed top-0 left-0 w-full h-full outline-none fade"
+      id="results"
+      tabindex="-1"
+      role="dialog"
+    >
+      <div
+        class="modal-dialog relative w-auto pointer-events-none max-w-lg my-36 mx-auto px-4 sm:px-0"
+        role="document"
+      >
+        <div
+          class="relative flex flex-col w-4/5 mx-auto pointer-events-auto bg-white border border-gray-300 rounded-lg"
+        >
+          <div
+            class="flex items-start justify-end p-4 border-gray-300 rounded-t"
+          >
+            <h5
+              class="mb-0 text-lg leading-normal mx-auto font-bold"
+              id="partyCode"
+            >
+              Meal Settings
+            </h5>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+          <div class="relative flex px-4 flex-col pb-4 gap-2">
+            <p>Price Point</p>
+            <input type="range" min="1" max="100" step="0.5" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+      crossorigin="anonymous"
+    ></script>
     <script>
+      // Check if account is already login
+      if (!(localStorage.getItem("uid") && localStorage.getItem("userObj"))) {
+        window.location.href = "./index.html";
+      } else {
+        document.getElementById("PFP").src =
+          JSON.parse(localStorage.getItem("result")).photoURL ||
+          "https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png";
+      }
+
       document.getElementById("dashboard").addEventListener("click", () => {
         window.location.href = "./dashboard.html";
       });
 
-      let imgCount = 0;
-      let checkCounter = 0;
-      var data = {
-        "Chicken Rice": {
-          "Hong Yu's Chick":
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Hainanese_Chicken_Rice.jpg/640px-Hainanese_Chicken_Rice.jpg",
-          "Kaleb's Chick":
-            "https://d1e1vgxjd1htwd.cloudfront.net/-/media/recipe-hainanese-chicken-rice.jpg?h=969&la=en&w=1250&hash=2AE75B9674FDE26B8978059DA848F8A888E2845C",
-        },
-        "Fried Chicken": {
-          KFC: "https://cdn.discordapp.com/attachments/650387369706389517/1021125177255407678/image.png",
-          "Texas Chicken":
-            "https://assets.grab.com/wp-content/uploads/sites/8/2019/03/12143755/Texas-Chicken-Chicken-Combo-delivery-kl-700x700.jpg",
-          JingaChicken:
-            "https://cdn.discordapp.com/attachments/650387369706389517/1021124233008529520/unknown.png",
-        },
-        Burgers: {
-          McDonald:
-            "https://b.zmtcdn.com/data/pictures/chains/0/20630/a1bb80a3bdb9968b0b937458ae6acfa8.jpg?fit=around|300:273",
-          KFC: "https://cdn.discordapp.com/attachments/1018710809360220221/1020012348183949362/unknown.png",
-        },
-        "Yong Tau Foo": {
-          RandomYong_Tau_Foo:
-            "https://ewr1.vultrobjects.com/hawkerpedia/article/20210512/4bHCDY9p0D9p_20210408_111319.jpg",
-        },
-        "Hokkien Mee": {
-          RandomHokkienMee:
-            "https://sethlui.com/wp-content/uploads/2021/10/Best-Hokkien-Mee-Ah-Hock.jpg",
-        },
-        "Char Kway Tiao": {
-          RandomChar_Kway_Tiao:
-            "https://noobcook.com/wp-content/uploads/2014/03/charkwayteow2.jpg",
-        },
-        Laksa: {
-          RandomLaksa:
-            "https://rasamalaysia.com/wp-content/uploads/2011/07/curry-laksa-thumb.jpg",
-        },
-        "Ayam Penyet": {
-          RandomAyamPenyet:
-            "https://burpple.imgix.net/foods/283117ab7a78753d09e1850511_original.?w=645&dpr=1&fit=crop&q=80&auto=format",
-        },
-        "Chili Crab": {
-          RandomKayaToast:
-            "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/video-api/assets/268999.jpg",
-        },
-        "Kaya Toast": {
-          RandomChiliCrab:
-            "https://www.thebestsingapore.com/wp-content/uploads/2014/11/best-kaya-toast-596x480.jpg",
-        },
-        "Dim Sum": {
-          RandomDimSum:
-            "http://cdn.cnn.com/cnnnext/dam/assets/160325033254-hk-dim-sum-fook-lam-moon.jpg",
-        },
-        Otah: {
-          citysatayOtah:
-            "https://citysatay.com/wp-content/uploads/2021/03/BananaLeafOtah.jpg",
-        },
-        "Ice Kachang": {
-          RandomIceKachang:
-            "https://singaporelocalfavourites.com/wp-content/uploads/2016/11/ice-kacang.jpg",
-        },
-        "Curry Puff": {
-          RandomCurryPuff:
-            "https://christieathome.com/wp-content/uploads/2020/12/Malaysian-Curry-Puffs-18-scaled.jpg",
-        },
-        Satay: {
-          RandomSatay:
-            "https://sadia.sg/uploads/recipes/20210802080638-2021-08-02recipes080634_md.jpg",
-        },
-        Chendol: {
-          RandomChendol:
-            "https://southeastasiabackpacker.com/wp-content/uploads/2020/11/Cendol-Header.jpg",
-        },
-        "Roti Prata": {
-          RandomRotiPrata:
-            "https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_450,h_300/https://danielfooddiary.com/wp-content/uploads/2020/05/pratasingapore3.jpg",
-        },
-        Naan: {
-          RandomNaan:
-            "https://www.budgetbytes.com/wp-content/uploads/2010/09/Homemade-Naan-stack-1.jpg",
-        },
-        "Tandoori Chicken": {
-          RandomTandooriChicken:
-            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/chicken-tandori-1526595014.jpg",
-        },
-        "Chicken Masala": {
-          RandomChickenMasala:
-            "https://static.toiimg.com/thumb/54673639.cms?width=1200&height=900",
-        },
-        "Fish Head Curry": {
-          RandomFishHeadCurry:
-            "https://img-global.cpcdn.com/recipes/a82f9bdc6c383ff4/1200x630cq70/photo.jpg",
-        },
-        "French Fries": {
-          RandomFrenchFries:
-            "https://static.toiimg.com/thumb/54659021.cms?imgsize=275086&width=800&height=800",
-        },
-        Pasta: {
-          TomatoPasta:
-            "https://static.toiimg.com/thumb/52759758.cms?imgsize=560987&width=800&height=800",
-        },
-        Chawanmushi: {
-          RandomSushi:
-            "https://www.justonecookbook.com/wp-content/uploads/2022/09/Chawanmushi-9784-I-500x500.jpg",
-        },
-        Sashimi: {
-          RandomSushi:
-            "https://www.rd.com/wp-content/uploads/2022/02/GettyImages-1284722254.jpg",
-        },
-        Sushi: {
-          RandomSushi:
-            "https://rimage.gnst.jp/livejapan.com/public/article/detail/a/00/00/a0000370/img/basic/a0000370_main.jpg?20201002142956&q=80&rw=750&rh=536",
-        },
-        "Miso Soup": {
-          RandomMisoSoup:
-            "https://www.pressurecookrecipes.com/wp-content/uploads/2021/05/miso-soup.jpg",
-        },
-        Ramen: {
-          RandomRamen:
-            "https://glebekitchen.com/wp-content/uploads/2017/04/tonkotsuramenfront.jpg",
-        },
-        "Korean BBQ ": {
-          RandomKoreanBBQ:
-            "https://iamafoodblog.b-cdn.net/wp-content/uploads/2020/11/korean-bbq-8064w.jpg",
-        },
-      };
+      const BACKEND_URL = "https://shiok-backend.onrender.com";
       const frame = document.body.querySelector(".frame");
-      for (const [key, value] of Object.entries(data)) {
-        console.log(Object.values(value)[0]);
-        appendCard(key, Object.values(value)[0]);
+      async function getFood() {
+        const response = await fetch(`${BACKEND_URL}/swipe`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_list: [localStorage.getItem("uid")],
+            spice_list: [1],
+          }),
+        });
+        const data = response.json();
+        return data;
       }
 
-      let current = frame.querySelector(".card:last-child");
-      let likeText = current.children[0];
+      var data;
+      let imgCount = 0;
+      let checkCounter = 0;
       let startX = 0,
         startY = 0,
         moveX = 0,
         moveY = 0;
-      initCard(current);
+      let swipedList = [];
 
-      document.querySelector("#like").onclick = () => {
-        moveX = 0.1;
-        moveY = 0;
-        complete();
-      };
-      document.querySelector("#hate").onclick = () => {
-        moveX = -0.1;
-        moveY = 0;
-        complete();
-      };
+      async function startProject() {
+        data = await getFood();
+        console.log(data);
 
-      function appendCard(key, value, first = false) {
-        const firstCard = frame.children[0];
-        const newCard = document.createElement("div");
-        newCard.className = "card";
-        newCard.dataset.illness = key;
-        newCard.style.backgroundImage = `url(${value})`;
-        newCard.style.backgroundColor = `#fff`;
-        newCard.innerHTML = `
-          <div class="is-like"></div>
-          <div class="bottom">
-            <div class="title mt-auto">
-              <span>${key.replaceAll("_", " ")}</span>
-            </div>
-            <div class="info opacity-0">
-              ${value.description}
-            </div>
-          </div>
-        `;
-        if (!first) {
-          if (firstCard) frame.insertBefore(newCard, firstCard);
-          else frame.appendChild(newCard);
-        } else {
-          frame.appendChild(newCard);
+        for await (let food of data["items"]) {
+          appendCard(food["name"], food["url"], food["description"]);
         }
-        imgCount++;
-      }
 
-      function initCard(card) {
-        card.addEventListener("pointerdown", onPointerDown);
-      }
+        let current = frame.querySelector(".card:last-child");
 
-      function setTransform(x, y, deg, duration) {
-        current.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${deg}deg)`;
-        likeText.style.opacity = Math.abs((x / innerWidth) * 2.1);
-        likeText.className = `is-like ${x > 0 ? "like" : "nope"}`;
-        if (duration) current.style.transition = `transform ${duration}ms`;
-      }
+        initCard(current);
 
-      function onPointerDown({ clientX, clientY }) {
-        startX = clientX;
-        startY = clientY;
-        current.addEventListener("pointermove", onPointerMove);
-        current.addEventListener("pointerup", onPointerUp);
-        current.addEventListener("pointerleave", onPointerUp);
-      }
-
-      function onPointerMove({ clientX, clientY }) {
-        moveX = clientX - startX;
-        moveY = clientY - startY;
-        setTransform(moveX, moveY, (moveX / innerWidth) * 50);
-      }
-
-      function onPointerUp() {
-        current.removeEventListener("pointermove", onPointerMove);
-        current.removeEventListener("pointerup", onPointerUp);
-        current.removeEventListener("pointerleave", onPointerUp);
-        if (Math.abs(moveX) > frame.clientWidth / 6) {
-          current.removeEventListener("pointerdown", onPointerDown);
+        let likeText = current.children[0];
+        document.querySelector("#like").onclick = () => {
+          moveX = 0.1;
+          moveY = 0;
           complete();
-        } else cancel();
-      }
+        };
+        document.querySelector("#hate").onclick = () => {
+          moveX = -0.1;
+          moveY = 0;
+          complete();
+        };
 
-      document.getElementById("return").addEventListener("click", () => {
-        if (checkCounter == 0) {
-          return;
+        function appendCard(name, imgURL, description, first = false) {
+          const firstCard = frame.children[0];
+          const newCard = document.createElement("div");
+          newCard.className = "card";
+          newCard.dataset.food = name;
+          newCard.dataset.foodImg = imgURL;
+          // newCard.dataset.brand = name;
+
+          newCard.style.backgroundImage = `url("${imgURL}")`;
+          newCard.style.backgroundColor = `#fff`;
+          newCard.style.backgroundOrigin = `center center`;
+          newCard.style.backgroundSize = `cover`;
+          newCard.style.backgroundRepeat = `no-repeat`;
+
+          newCard.innerHTML = `
+                <div class="is-like"></div>
+                <div class="bottom">
+                  <div class="title mt-auto">
+                    <span>${name.replaceAll("_", " ")}</span>
+                  </div>
+                  <div class="info text-sm">
+                    ${description}
+                  </div>
+                </div>
+              `;
+          if (!first) {
+            if (firstCard) frame.insertBefore(newCard, firstCard);
+            else frame.appendChild(newCard);
+          } else {
+            frame.appendChild(newCard);
+          }
+          imgCount++;
         }
-        // document.getElementById("title").style.opacity = 100;
-        // document.getElementById("icons").style.opacity = 100;
-        // if (document.getElementById("final")) {
-        //   document.getElementById("final").remove();
-        // }
-        frame.children[frame.children.length - 1].removeEventListener(
-          "pointerdown",
-          onPointerDown
-        );
-        appendCard(
-          Object.entries(data)[checkCounter - 1][0],
-          Object.values(Object.entries(data)[checkCounter - 1][1])[0],
-          true
-        );
-        current = frame.querySelector(".card:last-child");
-        initCard(frame.children[frame.children.length - 1]);
-        checkCounter--;
-        console.log(checkCounter);
-      });
 
-      function complete() {
-        if (checkCounter < Object.entries(data).length) {
-          const flyX = (Math.abs(moveX) / moveX) * innerWidth * 1.3;
-          const flyY = (moveY / moveX) * flyX;
+        function initCard(card) {
+          card.addEventListener("pointerdown", onPointerDown);
+        }
+
+        function setTransform(x, y, deg, duration) {
+          current.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${deg}deg)`;
+          likeText.style.opacity = Math.abs((x / innerWidth) * 2.1);
+          likeText.className = `is-like ${x > 0 ? "like" : "nope"}`;
+          // if (duration) current.style.transition = `transform ${duration}ms`;
+        }
+
+        function onPointerDown({ clientX, clientY }) {
+          startX = clientX;
+          startY = clientY;
+          current.addEventListener("pointermove", onPointerMove);
+          current.addEventListener("pointerup", onPointerUp);
+          current.addEventListener("pointerleave", onPointerUp);
+        }
+
+        function onPointerMove({ clientX, clientY }) {
+          moveX = clientX - startX;
+          moveY = clientY - startY;
+          setTransform(moveX, moveY, (moveX / innerWidth) * 50);
+        }
+
+        function onPointerUp() {
+          current.removeEventListener("pointermove", onPointerMove);
+          current.removeEventListener("pointerup", onPointerUp);
+          current.removeEventListener("pointerleave", onPointerUp);
+          if (Math.abs(moveX) > frame.clientWidth / 6) {
+            current.removeEventListener("pointerdown", onPointerDown);
+            complete();
+          } else cancel();
+        }
+
+        document.getElementById("return").addEventListener("click", () => {
+          if (checkCounter == 0) {
+            return;
+          }
+          swipedList.pop();
+          // document.getElementById("title").style.opacity = 100;
+          // document.getElementById("icons").style.opacity = 100;
+          // if (document.getElementById("final")) {
+          //   document.getElementById("final").remove();
+          // }
+          frame.children[frame.children.length - 1].removeEventListener(
+            "pointerdown",
+            onPointerDown
+          );
+          appendCard(
+            Object.entries(data)[checkCounter - 1][0],
+            Object.values(Object.entries(data)[checkCounter - 1][1])[0],
+            true
+          );
+          initCard(frame.children[frame.children.length - 1]);
+          checkCounter--;
+          console.log(checkCounter);
+          current = frame.querySelector(".card:last-child");
           likeText = current.children[0];
-          setTransform(flyX, flyY, (flyX / innerWidth) * 50, innerWidth);
-          const prev = current;
-          const next = current.previousElementSibling;
-          checkCounter++;
-          if (next) {
-            initCard(next);
-            current = next;
-            likeText = next.children[0];
-            setTimeout(() => {
-              frame.removeChild(prev);
-            }, innerWidth);
+        });
+
+        function complete() {
+          if (checkCounter < data["items"].length) {
+            const flyX = (Math.abs(moveX) / moveX) * innerWidth * 1.3;
+            const flyY = (moveY / moveX) * flyX;
+            if (flyX > 0) {
+              swipedList.push(current.dataset.food);
+            }
+            likeText = current.children[0];
+            setTransform(flyX, flyY, (flyX / innerWidth) * 50, innerWidth);
+            const prev = current;
+            const next = current.previousElementSibling;
+            checkCounter++;
+            if (next) {
+              initCard(next);
+              current = next;
+              likeText = next.children[0];
+              setTimeout(() => {
+                frame.removeChild(prev);
+              }, innerWidth);
+            }
+            if (checkCounter >= data["items"].length) {
+              processData();
+              console.log("PROCESSED", swipedList);
+            }
           }
         }
+        const currentLocation =
+          window.navigator && window.navigator.geolocation;
+        var latitude, longitude;
+
+        async function processData() {
+          if (currentLocation) {
+            currentLocation.getCurrentPosition(
+              (position) => {
+                navigator.geolocation.getCurrentPosition(getPosition);
+              },
+              (error) => {
+                console.log(error);
+              }
+            );
+          }
+        }
+
+        async function getPosition(position) {
+          var lat = position.coords.latitude;
+          var long = position.coords.longitude;
+          latitude = position.coords.latitude;
+          longitude = position.coords.longitude;
+          var accuracy = position.coords.accuracy;
+          console.log(latitude, longitude, data);
+          const foodList = data["items"].map((e) => e.name);
+          const response = await fetch(`${BACKEND_URL}/process`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              swipes: [
+                { userid: localStorage.getItem("uid"), swiped: swipedList },
+              ],
+              foods: foodList,
+              lat: latitude,
+              lon: longitude,
+            }),
+          });
+          const processData = await response.json();
+          console.log(processData);
+          $("");
+        }
+
+        function cancel() {
+          setTransform(0, 0, 0, 100);
+          setTimeout(() => (current.style.transition = ""), 100);
+        }
+
+        document.getElementById("moreInfo").addEventListener("click", () => {
+          console.log(current);
+          localStorage.setItem(
+            "foodItems",
+            JSON.stringify([
+              current.dataset.backgroundImage.split('("')[1].split(')"')[0], // food image
+              foodImg[foodImg.length - 1].querySelector("h2").innerHTML, // food name
+            ])
+          );
+          window.location.href = `./viewFood.html?foodType=${
+            foodImg[foodImg.length - 1].querySelector("h2").innerHTML
+          }`;
+        });
       }
 
-      function cancel() {
-        setTransform(0, 0, 0, 100);
-        setTimeout(() => (current.style.transition = ""), 100);
-      }
+      startProject();
     </script>
   </body>
 </html>

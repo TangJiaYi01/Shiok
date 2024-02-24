@@ -116,10 +116,12 @@
         var dataRowValue = await getDoc(dataRow);
         var firstTime = false;
         if (!dataRowValue.exists()) {
+          console.log("DHE", user);
           var data = {
             acorns: 30,
             member: false,
             type: type,
+            name: user.displayName,
             pfp:
               user.photoURL ||
               "https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png",
@@ -141,13 +143,14 @@
         login.classList.add("hidden");
         guest.classList.add("hidden");
         logOut.classList.remove("hidden");
-        if (firstTime && type != "Guest") {
-          window.location.href = "./info.html";
-        } else if (type == "Guest") {
-          window.location.href = "./swipe.html";
-        } else {
-          window.location.href = "./dashboard.html";
-        }
+        window.location.href = "./dashboard.html";
+        // if (firstTime && type != "Guest") {
+        //   window.location.href = "./info.html";
+        // } else if (type == "Guest") {
+        //   window.location.href = "./swipe.html";
+        // } else {
+        //   window.location.href = "./dashboard.html";
+        // }
         return;
       };
       guest.addEventListener("click", async (e) => {

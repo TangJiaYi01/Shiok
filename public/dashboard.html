@@ -152,6 +152,11 @@
       </a>
     </footer>
     <script>
+      // Check if account is already login
+      if (!(localStorage.getItem("uid") && localStorage.getItem("userObj"))) {
+        window.location.href = "./index.html";
+      }
+
       function getAbsoluteHeight(el) {
         // Get the DOM Node if you pass in a string
         el = typeof el === "string" ? document.querySelector(el) : el;
@@ -211,8 +216,9 @@
         `userHistory/${localStorage.getItem("uid")}`
       );
 
-      document.getElementById("name").innerHTML =
-        JSON.parse(localStorage.getItem("userObj")).type + " !";
+      document.getElementById("name").innerHTML = `${
+        JSON.parse(localStorage.getItem("result")).displayName || "Guest"
+      }!`;
 
       var dataRowValue = await getDoc(dataRow);
       if (
