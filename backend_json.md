@@ -36,17 +36,15 @@
 **Input:**
 ```json
 {
-  "data": {
-    "swipes": [
-      [
-        {"userid": "a", "swiped": ["Hokkien Mee", "Nasi Lemak"]},
-        {"userid": "b", "swiped": ["Nasi Lemak"]},
-        {"userid": "c", "swiped": ["Chicken Rice"]},
-        {"userid": "d", "swiped": ["Fries"]}
-      ]
-    ],
-    "foods": ["Hokkien Mee", "Nasi Lemak", "Chicken Rice", "Bak Kut Teh", "Fries"]
-  }
+  "swipes": [
+    [
+      {"userid": "a", "swiped": ["Hokkien Mee", "Nasi Lemak"]},
+      {"userid": "b", "swiped": ["Nasi Lemak"]},
+      {"userid": "c", "swiped": ["Chicken Rice"]},
+      {"userid": "d", "swiped": ["Fries"]}
+    ]
+  ],
+  "foods": ["Hokkien Mee", "Nasi Lemak", "Chicken Rice", "Bak Kut Teh", "Fries"]
 }
 ```
 
