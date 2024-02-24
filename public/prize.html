@@ -177,11 +177,6 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      let vh = 0.01 * window.innerHeight;
-      console.log(vh),
-        document.documentElement.style.setProperty("--vh", vh + "px");
-    </script>
-    <script>
       function getAbsoluteHeight(el) {
         // Get the DOM Node if you pass in a string
         el = typeof el === "string" ? document.querySelector(el) : el;
@@ -226,7 +221,7 @@
         document.getElementById("deals").innerHTML += `
         <li class="marquee__item">
           <div class="aspect-square flex justify-center items-center text-sm p-2 text-white"
-          
+
           style="background: #${color[genNumber(0, color.length)]}">${
           dealsList[i]
         }</div>
@@ -235,7 +230,7 @@
         document.getElementById("deals2").innerHTML += `
         <li class="marquee__item">
           <div class="aspect-square flex justify-center items-center text-sm p-2 text-white"
-          
+
           style="background: #${color[genNumber(0, color.length)]}">${
           dealsList[i]
         }</div>
