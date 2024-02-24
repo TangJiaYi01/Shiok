@@ -322,7 +322,7 @@
     </script>
     <script>
       function updateAcorns() {
-        var acorns = localStorage.getItem("acorns") || 10;
+        var acorns = JSON.parse(localStorage.getItem("userObj"))['acorns'] || 0;
         document.getElementById("acorns").innerHTML = acorns;
       }
       updateAcorns();

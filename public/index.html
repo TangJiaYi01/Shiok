@@ -126,7 +126,6 @@
               user.photoURL ||
               "https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png",
           };
-          localStorage.setItem(`acorns`, data.acorns);
           try {
             await setDoc(dataRow, data, { merge: true });
           } catch (error) {

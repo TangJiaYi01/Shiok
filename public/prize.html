@@ -251,7 +251,7 @@
     </script>
     <script>
       function updateAcorns() {
-        var acorns = localStorage.getItem("acorns") || 10;
+        var acorns = JSON.parse(localStorage.getItem("userObj"))["acorns"] || 0;
         document.getElementById("acorns").innerHTML = acorns;
       }
       updateAcorns();
@@ -259,11 +259,11 @@
     <!--gacha Chance-->
     <script>
       document.getElementById("spin").addEventListener("click", () => {
-        localStorage.setItem(
-          "acorns",
+        let userObj = JSON.parse(localStorage.getItem("userObj"));
+        userObj["acorns"] =
           Number(document.getElementById("acorns").innerHTML) -
-            Number(document.getElementById("spinCost").innerHTML)
-        );
+          Number(document.getElementById("spinCost").innerHTML);
+        localStorage.setItem("userObj", JSON.stringify(userObj));
         document.getElementById(
           "machine"
         ).src = `./img/gachaMachineShaking.gif`;
