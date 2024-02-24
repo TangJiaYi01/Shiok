@@ -81,11 +81,9 @@
     "environment": 5,
     "value": 2
   },
-  "reviews": [
-    {"rating": 4, "content": "not bad, i like it haha"},
-    {"rating": 1, "content": "disgusting food sia"}
-  ],
-  "url": "https://maps.google.com/"
+  "review": "user say not bad, quite good",
+  "image_url": "https://google.com/place/image/fasjef.jpg",
+  "map_url": "https://maps.google.com/"
 }
 ```
 
