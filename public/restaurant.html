@@ -21,5 +21,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./style/main.css" />
   </head>
-  <body></body>
+  <body>
+    <header
+      class="flex justify-between px-4 py-2 items-center measure md:max-w-lg mx-auto w-full h-[66px]"
+    >
+      <div class="icon aspect-square">
+        <img
+          src="https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png"
+          alt="profile pic"
+          class="w-full h-full object-cover rounded-full"
+          id="PFP"
+        />
+      </div>
+      <div class="logo aspect-square">
+        <img src="./img/logo.png" alt="logo" class="w-full h-full" />
+      </div>
+      <div class="icon aspect-square" id="shakerMove">
+        <img
+          src="./img/shaker.png"
+          alt="shaker"
+          class="w-full h-full"
+          id="shaker"
+          data-spice_up="false"
+        />
+      </div>
+    </header>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithRedirect,
+        getRedirectResult,
+        signInWithPopup,
+        signOut,
+        signInAnonymously,
+        setPersistence,
+        browserLocalPersistence,
+      } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyB8rdFuZFjdGJxCP829dhVjKfNKnIfuyQE",
+        authDomain: "shiok-ah.firebaseapp.com",
+        projectId: "shiok-ah",
+        storageBucket: "shiok-ah.appspot.com",
+        messagingSenderId: "238095376133",
+        appId: "1:238095376133:web:57039ed53990d3a41be16c",
+        measurementId: "G-P22X8YRJPV",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider(app);
+      const firestore = getFirestore();
+
+      // Check if account is already login
+      if (!(localStorage.getItem("uid") && localStorage.getItem("userObj"))) {
+        window.location.href = "./index.html";
+      } else {
+        document.getElementById("PFP").src =
+          JSON.parse(localStorage.getItem("result")).photoURL ||
+          "https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png";
+      }
+
+      document.getElementById("dashboard").addEventListener("click", () => {
+        window.location.href = "./dashboard.html";
+      });
+	</script>
+
+  </body>
 </html>
