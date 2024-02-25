@@ -98,7 +98,44 @@
         </button>
       </div>
     </div>
-    <script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithRedirect,
+        getRedirectResult,
+        signInWithPopup,
+        signOut,
+        signInAnonymously,
+        setPersistence,
+        browserLocalPersistence,
+      } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyB8rdFuZFjdGJxCP829dhVjKfNKnIfuyQE",
+        authDomain: "shiok-ah.firebaseapp.com",
+        projectId: "shiok-ah",
+        storageBucket: "shiok-ah.appspot.com",
+        messagingSenderId: "238095376133",
+        appId: "1:238095376133:web:57039ed53990d3a41be16c",
+        measurementId: "G-P22X8YRJPV",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider(app);
+      const firestore = getFirestore();
+
       // Check if account is already login
       if (!(localStorage.getItem("uid") && localStorage.getItem("userObj"))) {
         window.location.href = "./index.html";
@@ -131,6 +168,7 @@
           localStorage.setItem("spice_up", true);
           document.getElementById("shaker").dataset.spice_up = true;
         }
+        window.location.reload();
       });
 
       const BACKEND_URL = "https://shiok-backend.onrender.com";
@@ -203,16 +241,16 @@
           newCard.style.backgroundRepeat = `no-repeat`;
 
           newCard.innerHTML = `
-                <div class="is-like"></div>
-                <div class="bottom">
-                  <div class="title mt-auto">
-                    <span>${name.replaceAll("_", " ")}</span>
-                  </div>
-                  <div class="info text-sm">
-                    ${description}
-                  </div>
-                </div>
-              `;
+                      <div class="is-like"></div>
+                      <div class="bottom">
+                        <div class="title mt-auto">
+                          <span>${name.replaceAll("_", " ")}</span>
+                        </div>
+                        <div class="info text-sm">
+                          ${description}
+                        </div>
+                      </div>
+                    `;
           if (!first) {
             if (firstCard) frame.insertBefore(newCard, firstCard);
             else frame.appendChild(newCard);
@@ -283,13 +321,35 @@
           likeText = current.children[0];
         });
 
-        function complete() {
+        async function complete() {
           if (checkCounter < data["items"].length) {
             const flyX = (Math.abs(moveX) / moveX) * innerWidth * 1.3;
             const flyY = (moveY / moveX) * flyX;
+            let like = false;
             if (flyX > 0) {
               swipedList.push(current.dataset.food);
+              like = true;
             }
+            if (!localStorage.getItem("uid")) {
+              return;
+            }
+            const dataRow = doc(
+              firestore,
+              `userHistory/${localStorage.getItem("uid")}`
+            );
+            var dataRowValue = await getDoc(dataRow);
+            var insertData = {};
+            insertData[current.dataset.food] = [
+              current.dataset.foodImg,
+              like ? "like" : "dont",
+            ];
+            try {
+              await setDoc(dataRow, insertData, { merge: true });
+            } catch (error) {
+              console.error(error);
+              return false;
+            }
+            console.log("Added Data");
             likeText = current.children[0];
             setTransform(flyX, flyY, (flyX / innerWidth) * 50, innerWidth);
             const prev = current;
@@ -306,8 +366,8 @@
             if (checkCounter >= data["items"].length) {
               frame.removeChild(prev);
               document.getElementById("frame").innerHTML = `
-          PROCESSING ...
-          `;
+                PROCESSING ...
+                `;
               processData();
               console.log("PROCESSED", swipedList);
             }
@@ -369,60 +429,60 @@
               "url"
             ];
             processResult += `
-            <div class="flex gap-2 items-center">
-              <div class="flex flex-col min-w-[75px] max-w-[75px] justify-center items-center">
-                <img src="${imgURL}" class="icon border-2 rounded-full border-black object-cover aspect-square bg-white" />
-                <span class="text-xs text-center line-clamp-2">${
-                  result.name
-                }</span>
-              </div>
-              <div class="flex gap-1 w-full items-center">
-                <div class="bg-black h-5" style="width: ${
-                  (parseInt(result["votes"]) / maxVote) * 100 || 0
-                }%"></div>
-                <span class="text-xs">${
-                  (parseInt(result["votes"]) / maxVote) * 100 || 0
-                }%</span>
-              </div>
-              <button
-                class="w-[30px] h-[30px] ml-auto icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2 relative"
-                onclick="viewFood('${result.name}','${imgURL}')"
-              >
-                <i
-                  class="fa-solid fa-angle-up text-xl text-black"
-                  aria-hidden="true"
-                ></i>
-              </button>
-            </div>
-            `;
+                  <div class="flex gap-2 items-center">
+                    <div class="flex flex-col min-w-[75px] max-w-[75px] justify-center items-center">
+                      <img src="${imgURL}" class="icon border-2 rounded-full border-black object-cover aspect-square bg-white" />
+                      <span class="text-xs text-center line-clamp-2">${
+                        result.name
+                      }</span>
+                    </div>
+                    <div class="flex gap-1 w-full items-center">
+                      <div class="bg-black h-5" style="width: ${
+                        (parseInt(result["votes"]) / maxVote) * 100 || 0
+                      }%"></div>
+                      <span class="text-xs">${
+                        (parseInt(result["votes"]) / maxVote) * 100 || 0
+                      }%</span>
+                    </div>
+                    <button
+                      class="w-[30px] h-[30px] ml-auto icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2 relative"
+                      onclick="viewFood('${result.name}','${imgURL}')"
+                    >
+                      <i
+                        class="fa-solid fa-angle-up text-xl text-black"
+                        aria-hidden="true"
+                      ></i>
+                    </button>
+                  </div>
+                  `;
           }
 
           document.getElementById("frame").innerHTML = `
-          <div class="bg-slate-100 flex flex-col py-3 px-4 rounded-xl w-[90%] gap-3">
-            <h3 class='text-center'>Results</h3>
-            ${processResult}
-            <div class="flex gap-2 justify-around">
-              <button
-                type="button"
-                class="text-white buttonColor w-full text-sm rounded-full py-2 px-4 text-center focus:outline-blue-500 focus:outline-2 focus:outline text-xl"
-                id="cancel"
-              >
-                <div class="flex gap-2 items-center justify-center">
-                  <p>Cancel</p>
+                <div class="bg-slate-100 flex flex-col py-3 px-4 rounded-xl w-[90%] gap-3">
+                  <h3 class='text-center'>Results</h3>
+                  ${processResult}
+                  <div class="flex gap-2 justify-around">
+                    <button
+                      type="button"
+                      class="text-white buttonColor w-full text-sm rounded-full py-2 px-4 text-center focus:outline-blue-500 focus:outline-2 focus:outline text-xl"
+                      id="cancel"
+                    >
+                      <div class="flex gap-2 items-center justify-center">
+                        <p>Cancel</p>
+                      </div>
+                    </button>
+                    <button
+                      type="button"
+                      class="text-white buttonColor w-full text-sm rounded-full py-2 px-4 text-center focus:outline-blue-500 focus:outline-2 focus:outline text-xl"
+                      id="reload"
+                    >
+                      <div class="flex gap-2 items-center justify-center">
+                        <p>Swipe Again!</p>
+                      </div>
+                    </button>
+                  </div>
                 </div>
-              </button>
-              <button
-                type="button"
-                class="text-white buttonColor w-full text-sm rounded-full py-2 px-4 text-center focus:outline-blue-500 focus:outline-2 focus:outline text-xl"
-                id="reload"
-              >
-                <div class="flex gap-2 items-center justify-center">
-                  <p>Swipe Again!</p>
-                </div>
-              </button>
-            </div>
-          </div>
-          `;
+                `;
           document.getElementById("reload").addEventListener("click", () => {
             window.location.reload();
           });

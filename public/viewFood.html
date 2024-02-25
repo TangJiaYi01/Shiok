@@ -157,11 +157,11 @@
         document.getElementById(`places`).innerHTML += `
                   <a
                     class="flex gap-2 justify-between items-center border-b last:border-0 border-slate-200 p-2 px-3 hover:bg-zinc-500/10 mainBG"
-                    href="${restaurant.id}"
+                    href="./restaurant.html?restaurant_id=${restaurant.id}"
                   >
                     <div class="grow">
                       <p class="placeName font-bold underline">${restaurant.name}</p>
-                      <p class="address text-sm">${restaurant.name}</p>
+                      <p class="address text-sm">${restaurant.address}</p>
                       <div class='flex gap-1 items-center'><i class='fa fa-star'></i>${restaurant.rating}</div>
                     </div>
                     <div class="aspect-square grow max-w-[20%]">

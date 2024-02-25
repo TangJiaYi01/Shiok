@@ -240,12 +240,12 @@
               <div
                 class="text-center w-full bg-slate-200 rounded-bl-[10px] rounded-br-[10px] p-1 absolute bottom-0 flex items-center justify-center gap-2 text-xs"
               >
-                <p data-brand=${dataPoints[1]}>${foodName}</p>
+                <p>${foodName}</p>
                 <i
                   class="preference text-${
                     dataPoints[2] == "like" ? "green" : "red"
                   }-500 bi bi-hand-thumbs-${
-            dataPoints[2] == "like" ? "up" : "down"
+            dataPoints[1] == "like" ? "up" : "down"
           }-fill"
                 ></i>
               </div>
