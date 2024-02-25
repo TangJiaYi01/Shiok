@@ -43,6 +43,7 @@
           alt="shaker"
           class="w-full h-full"
           id="shaker"
+          data-spice_up="false"
         />
       </div>
     </header>
@@ -111,9 +112,34 @@
         window.location.href = "./dashboard.html";
       });
 
+      if (
+        localStorage.getItem("spice_up") &&
+        localStorage.getItem("spice_up") == "true"
+      ) {
+        document.getElementById("shaker").dataset.spice_up =
+          localStorage.getItem("spice_up");
+      } else {
+        document.getElementById("shaker").dataset.spice_up = false;
+        localStorage.setItem("spice_up", false);
+      }
+
+      document.getElementById("shaker").addEventListener("click", () => {
+        if (document.getElementById("shaker").dataset.spice_up == "true") {
+          localStorage.setItem("spice_up", false);
+          document.getElementById("shaker").dataset.spice_up = false;
+        } else {
+          localStorage.setItem("spice_up", true);
+          document.getElementById("shaker").dataset.spice_up = true;
+        }
+      });
+
       const BACKEND_URL = "https://shiok-backend.onrender.com";
       const frame = document.body.querySelector(".frame");
       async function getFood() {
+        let spice_up = 0;
+        if (document.getElementById("shaker").dataset.spice_up == "true") {
+          spice_up = 1;
+        }
         const response = await fetch(`${BACKEND_URL}/swipe`, {
           method: "POST",
           headers: {
@@ -121,7 +147,7 @@
           },
           body: JSON.stringify({
             id_list: [localStorage.getItem("uid")],
-            spice_list: [1],
+            spice_list: [spice_up],
           }),
         });
         const data = response.json();
@@ -330,6 +356,13 @@
           console.log(processData);
           let processResult = "";
           restaurantData = processData;
+          let maxVote = processData["result"][0].votes;
+          for (let i = 1; i < processData["result"].length; i++) {
+            if (processData["result"][i].votes > maxVote) {
+              maxVote = processData["result"][i].votes;
+            }
+          }
+
           let numberOfMember = processData["result"].length;
           for (let result of processData["result"]) {
             let imgURL = data["items"].filter((e) => e.name == result.name)[0][
@@ -338,14 +371,19 @@
             processResult += `
             <div class="flex gap-2 items-center">
               <div class="flex flex-col min-w-[75px] max-w-[75px] justify-center items-center">
-                <img src="${imgURL}" class="icon border-2 rounded-full border-black object-cover aspect-square" />
+                <img src="${imgURL}" class="icon border-2 rounded-full border-black object-cover aspect-square bg-white" />
                 <span class="text-xs text-center line-clamp-2">${
                   result.name
                 }</span>
               </div>
-              <div class="bg-black h-5" style="width: ${
-                100 / parseInt(result["votes"])
-              }%"></div>
+              <div class="flex gap-1 w-full items-center">
+                <div class="bg-black h-5" style="width: ${
+                  (parseInt(result["votes"]) / maxVote) * 100 || 0
+                }%"></div>
+                <span class="text-xs">${
+                  (parseInt(result["votes"]) / maxVote) * 100 || 0
+                }%</span>
+              </div>
               <button
                 class="w-[30px] h-[30px] ml-auto icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2 relative"
                 onclick="viewFood('${result.name}','${imgURL}')"
@@ -422,7 +460,9 @@
           JSON.stringify([
             img, // food image
             name, // food name
-            restaurantData['result'].filter((e) => e.name == name)[0]['restaurant'],
+            restaurantData["result"].filter((e) => e.name == name)[0][
+              "restaurant"
+            ],
           ])
         );
         window.location.href = `./viewFood.html?foodType=${name}`;

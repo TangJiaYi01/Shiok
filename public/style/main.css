@@ -327,12 +327,15 @@ footer {
 }
 
 #shaker {
-  rotate: -45deg;
+  rotate: 0deg;
+  /* rotate: -45deg; */
+  transition: all ease-in-out 500ms;
 }
 
 #shaker:hover,
 .shake {
   animation: shake 1s linear infinite;
+  rotate: -45deg;
 }
 
 @keyframes shake {
