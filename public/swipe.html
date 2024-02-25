@@ -203,20 +203,6 @@
       let swipedList = [];
       var restaurantData;
 
-      function viewResult(name, img) {
-        localStorage.setItem(
-          "foodItems",
-          JSON.stringify([
-            img, // food image
-            name, // food name
-            restaurantData["result"].filter((e) => e.name == name)[0][
-              "restaurant"
-            ],
-          ])
-        );
-        window.location.href = `./viewFood.html?foodType=${name}`;
-      }
-
       async function startProject() {
         data = await getFood();
         console.log(data);
@@ -429,7 +415,7 @@
           });
           const processData = await response.json();
           console.log(processData);
-          let processResult = "";
+          let processResult = [];
           restaurantData = processData;
           let maxVote = processData["result"][0].votes;
           for (let i = 1; i < processData["result"].length; i++) {
@@ -443,39 +429,119 @@
             let imgURL = data["items"].filter((e) => e.name == result.name)[0][
               "url"
             ];
-            processResult += `
-                  <div class="flex gap-2 items-center">
-                    <div class="flex flex-col min-w-[75px] max-w-[75px] justify-center items-center">
-                      <img src="${imgURL}" class="icon border-2 rounded-full border-black object-cover aspect-square bg-white" />
-                      <span class="text-xs text-center line-clamp-2">${
-                        result.name
-                      }</span>
-                    </div>
-                    <div class="flex gap-1 w-full items-center">
-                      <div class="bg-black h-5" style="width: ${
-                        (parseInt(result["votes"]) / maxVote) * 100 || 0
-                      }%"></div>
-                      <span class="text-xs">${
-                        (parseInt(result["votes"]) / maxVote) * 100 || 0
-                      }%</span>
-                    </div>
-                    <button
-                      class="w-[30px] h-[30px] ml-auto icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2 relative"
-                      onclick="viewResult('${result.name}','${imgURL}')"
-                    >
-                      <i
-                        class="fa-solid fa-angle-up text-xl text-black"
-                        aria-hidden="true"
-                      ></i>
-                    </button>
-                  </div>
-                  `;
+
+            const container = document.createElement("div");
+            container.classList.add("flex", "gap-2", "items-center");
+
+            const firstFlexItem = document.createElement("div");
+            firstFlexItem.classList.add(
+              "flex",
+              "flex-col",
+              "min-w-[75px]",
+              "max-w-[75px]",
+              "justify-center",
+              "items-center"
+            );
+            const image = document.createElement("img");
+            image.src = imgURL;
+            image.classList.add(
+              "icon",
+              "border-2",
+              "rounded-full",
+              "border-black",
+              "object-cover",
+              "aspect-square",
+              "bg-white"
+            );
+            const nameSpan = document.createElement("span");
+            nameSpan.classList.add("text-xs", "text-center", "line-clamp-2");
+            nameSpan.textContent = result.name;
+            firstFlexItem.appendChild(image);
+            firstFlexItem.appendChild(nameSpan);
+            container.appendChild(firstFlexItem);
+
+            const secondFlexItem = document.createElement("div");
+            secondFlexItem.classList.add(
+              "flex",
+              "gap-1",
+              "w-full",
+              "items-center"
+            );
+            const backgroundBar = document.createElement("div");
+            backgroundBar.classList.add("bg-black", "h-5");
+            backgroundBar.style.width = `${
+              (parseInt(result.votes) / maxVote) * 100 || 0
+            }%`;
+            const percentageSpan = document.createElement("span");
+            percentageSpan.classList.add("text-xs");
+            percentageSpan.textContent = `${
+              (parseInt(result.votes) / maxVote) * 100 || 0
+            }%`;
+            secondFlexItem.appendChild(backgroundBar);
+            secondFlexItem.appendChild(percentageSpan);
+            container.appendChild(secondFlexItem);
+
+            const button = document.createElement("button");
+            button.classList.add(
+              "w-[30px]",
+              "h-[30px]",
+              "ml-auto",
+              "icon",
+              "aspect-square",
+              "rounded-full",
+              "bg-slate-200",
+              "flex",
+              "justify-center",
+              "items-center",
+              "p-2",
+              "relative"
+            );
+            button.addEventListener("click", () => {
+              viewResult(`${result.name}`, `${imgURL}`);
+            });
+            const icon = document.createElement("i");
+            icon.classList.add(
+              "fa-solid",
+              "fa-angle-up",
+              "text-xl",
+              "text-black"
+            );
+            icon.setAttribute("aria-hidden", "true");
+            button.appendChild(icon);
+            container.appendChild(button);
+            processResult.push(container);
+            // processResult += `
+            //       <div class="flex gap-2 items-center">
+            //         <div class="flex flex-col min-w-[75px] max-w-[75px] justify-center items-center">
+            //           <img src="${imgURL}" class="icon border-2 rounded-full border-black object-cover aspect-square bg-white" />
+            //           <span class="text-xs text-center line-clamp-2">${
+            //             result.name
+            //           }</span>
+            //         </div>
+            //         <div class="flex gap-1 w-full items-center">
+            //           <div class="bg-black h-5" style="width: ${
+            //             (parseInt(result["votes"]) / maxVote) * 100 || 0
+            //           }%"></div>
+            //           <span class="text-xs">${
+            //             (parseInt(result["votes"]) / maxVote) * 100 || 0
+            //           }%</span>
+            //         </div>
+            //         <button
+            //           class="w-[30px] h-[30px] ml-auto icon aspect-square rounded-full bg-slate-200 flex justify-center items-center p-2 relative"
+            //           onclick="viewResult('${result.name}','${imgURL}')"
+            //         >
+            //           <i
+            //             class="fa-solid fa-angle-up text-xl text-black"
+            //             aria-hidden="true"
+            //           ></i>
+            //         </button>
+            //       </div>
+            //       `;
           }
 
           document.getElementById("frame").innerHTML = `
                 <div class="bg-slate-100 flex flex-col py-3 px-4 rounded-xl w-[90%] gap-3">
-                  <h3 class='text-center'>Results</h3>
-                  ${processResult}
+                  <h3 class='text-center' id='resultText'>Results</h3>
                   <div class="flex gap-2 justify-around">
                     <button
                       type="button"
@@ -498,6 +564,11 @@
                   </div>
                 </div>
                 `;
+
+          processResult.forEach((container) => {
+            document.getElementById("resultText").append(container);
+          });
+
           document.getElementById("reload").addEventListener("click", () => {
             window.location.reload();
           });
@@ -511,23 +582,23 @@
           setTransform(0, 0, 0, 100);
           setTimeout(() => (current.style.transition = ""), 100);
         }
-
-        // document.getElementById("moreInfo").addEventListener("click", () => {
-        //   console.log(current);
-        //   localStorage.setItem(
-        //     "foodItems",
-        //     JSON.stringify([
-        //       current.dataset.backgroundImage.split('("')[1].split(')"')[0], // food image
-        //       foodImg[foodImg.length - 1].querySelector("h2").innerHTML, // food name
-        //     ])
-        //   );
-        //   window.location.href = `./viewFood.html?foodType=${
-        //     foodImg[foodImg.length - 1].querySelector("h2").innerHTML
-        //   }`;
-        // });
       }
 
       startProject();
+
+      function viewResult(name, img) {
+        localStorage.setItem(
+          "foodItems",
+          JSON.stringify([
+            img, // food image
+            name, // food name
+            restaurantData["result"].filter((e) => e.name == name)[0][
+              "restaurant"
+            ],
+          ])
+        );
+        window.location.href = `./viewFood.html?foodType=${name}`;
+      }
     </script>
   </body>
 </html>

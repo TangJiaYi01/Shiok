@@ -58,7 +58,7 @@
         </div>
       </div>
       <h1 class="font-bold text-xl pt-3" id="foodName"></h1>
-      <div class="remain overflow-y-auto grow al" id="places"></div>
+      <div class="remain overflow-y-auto grow h-[215px]" id="places"></div>
     </div>
     <footer
       class="px-2 py-3 w-full md:max-w-lg mx-auto bg-slate-200 fixed md:left-0.5 md:right-0.5 bottom-0 rounded-tl-[25px] rounded-tr-[25px] flex gap-2 justify-evenly measure"
@@ -129,23 +129,23 @@
           "https://raw.githubusercontent.com/UltraRaptorYT/SPIT/main/server/img/default.png";
       }
 
-      function getAbsoluteHeight(el) {
-        // Get the DOM Node if you pass in a string
-        el = typeof el === "string" ? document.querySelector(el) : el;
+      // function getAbsoluteHeight(el) {
+      //   // Get the DOM Node if you pass in a string
+      //   el = typeof el === "string" ? document.querySelector(el) : el;
 
-        var styles = window.getComputedStyle(el);
-        var margin =
-          parseFloat(styles["marginTop"]) + parseFloat(styles["marginBottom"]);
+      //   var styles = window.getComputedStyle(el);
+      //   var margin =
+      //     parseFloat(styles["marginTop"]) + parseFloat(styles["marginBottom"]);
 
-        return Math.ceil(el.offsetHeight + margin);
-      }
-      var heightSum = 0;
-      for (var ele of document.querySelectorAll(".measure")) {
-        console.log(ele);
-        heightSum += getAbsoluteHeight(ele);
-      }
-      document.getElementById("body").style.height =
-        getAbsoluteHeight(document.getElementById("body")) - heightSum + `px`;
+      //   return Math.ceil(el.offsetHeight + margin);
+      // }
+      // var heightSum = 0;
+      // for (var ele of document.querySelectorAll(".measure")) {
+      //   console.log(ele);
+      //   heightSum += getAbsoluteHeight(ele);
+      // }
+      // document.getElementById("body").style.height =
+      //   getAbsoluteHeight(document.getElementById("body")) - heightSum + `px`;
     </script>
     <script>
       var data = JSON.parse(localStorage.getItem(`foodItems`));
@@ -153,7 +153,10 @@
       document.getElementById("foodName").innerHTML = data[1];
       let restaurants = data[2];
       console.log(restaurants);
+      document.getElementById(`places`).innerHTML = "";
       for (let restaurant of restaurants) {
+        console.log(restaurant);
+        console.log(document.getElementById(`places`));
         document.getElementById(`places`).innerHTML += `
                   <a
                     class="flex gap-2 justify-between items-center border-b last:border-0 border-slate-200 p-2 px-3 hover:bg-zinc-500/10 mainBG"
