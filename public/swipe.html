@@ -155,9 +155,11 @@
       ) {
         document.getElementById("shaker").dataset.spice_up =
           localStorage.getItem("spice_up");
+        document.getElementById("shaker").classList.add("shake");
       } else {
         document.getElementById("shaker").dataset.spice_up = false;
         localStorage.setItem("spice_up", false);
+        document.getElementById("shaker").classList.remove("shake");
       }
 
       document.getElementById("shaker").addEventListener("click", () => {

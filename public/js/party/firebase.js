@@ -225,7 +225,6 @@
 //   }
 // });
 
-
 import {
   getFirestore,
   doc,
@@ -295,7 +294,7 @@ async function createParty() {
     window.location.href = `./party.html?partyID=${partyCode}&leader=true`;
   } catch (err) {
     console.error("Error creating party:", err);
-    alert("Failed to create a new party. Please try again later.");
+    // alert("Failed to create a new party. Please try again later.");
   }
 }
 
